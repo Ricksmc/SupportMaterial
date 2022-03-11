@@ -1,0 +1,122 @@
+insert into pessoas values
+(DEFAULT,'Ana', '1975-12-22','F','52.3','1.45','EUA'),
+(DEFAULT,'Pedro', '2000-07-15','M','52.3','1.45',default),
+(DEFAULT,'Mara', '1999-05-30','F','75.9','1.70','Portugal');
+
+select * from pessoas;
+alter table pessoas add column profissao varchar(10);
+alter table pessoas drop column profissao;
+alter table pessoas add column profissao varchar(10) after nome;
+alter table pessoas add codigo int first;
+alter table pessoas modify profissao varchar(20) not null default '';
+alter table pessoas change profissao prof varchar(20) not null default '';
+alter table pessoas rename to Alunos;
+desc person;
+alter table person rename to Alunos;
+create table if not exists cursos (nome varchar(30) not null unique, descricao text, carga int unsigned, totaulas int, ano year default '2020')
+default charset=utf8;
+desc cursos;
+alter table cursos add codigo int first;
+alter table cursos add primary key(codigo);
+drop table cursos;
+insert into cursos values
+('1', 'HTML4', 'Curso de HTML5', '40', '37', '2014'),
+('2', 'Algoritmos', 'Lógica de Programação', '20', '15', '2014'),
+('3', 'Photoshop', 'Dicas de Photoshop CC', '10', '8', '2014'),
+('4', 'PGP', 'Curso de PHP para iniciantes', '40', '20', '2010'),
+('5', 'JARVA', 'Introdução à linguagem JAVA', '10', '29', '2000'),
+('6', 'MySQL', 'Banco de dados MySQL', '30', '15', '2016'),
+('7', 'Word', 'Curso completo de Word', '40', '30', '2016'),
+('8', 'Sapateado', 'Danças rítmicas', '40', '30', '2018'),
+('9', 'Cozinha Árabe', 'Aprenda a fazer kibe', '40', '30', '2018'),
+('10', 'Youtuber', 'Gerar polêmica e ganhar inscritos', '5', '2', '2018');
+select * from cursos;
+desc cursos;
+update cursos set nome = 'HTML5' where codigo = '1';
+update cursos set nome = 'PHP', ano = '2015' where codigo = '4';
+update cursos set nome = 'JAVA', carga = '40', ano = '2015' where codigo = '5' limit 1;
+delete from cursos where codigo='8'; 
+delete from cursos where ano='2018' limit 1;
+truncate cursos;
+SELECT `nome`,`ano`from cursos where `ano` between 2014 and 2016;
+select * from cursos;
+SELECT nome, descricao, ano from cursos where ano <> 2016 order by ano desc, nome asc;
+select * from cursos where totaulas between 20 and 40;
+select idcurso, nome from cursos where ano in(2014,2016,2018) order by nome;
+select nome, carga, totaulas from cursos where carga > 35 and totaulas < 30;
+select nome, carga, totaulas from cursos where carga > 35 or totaulas < 30;
+use cadastro;
+select * from cursos where nome like 'p%';
+select * from cursos where nome like '%a';
+select * from cursos where nome like '%a%';
+select * from cursos where nome not like '%a%';
+select * from cursos where nome like 'ph%p_';
+select * from gafanhotos where nome like '%silva%';
+select * from gafanhotos where nome like '%_silva%';
+select * from gafanhotos where nome like '%silva';
+select * from gafanhotos where nome like 'silva%';
+select distinct nacionalidade from gafanhotos order by nacionalidade;
+select count(*) from cursos;
+select * from cursos where carga > 30;
+select count(*) from cursos where carga > 40;
+select count(nome) from cursos;
+select * from cursos order by carga;
+select max(carga) from cursos;
+select * from cursos where ano='2016';
+select max(totaulas) from cursos where ano = '2016';
+select min(totaulas) from cursos;
+select sum(totaulas) from cursos;
+select avg(totaulas) from cursos;
+SELECT * FROM GAFANHOTOS;
+SELECT NOME FROM GAFANHOTOS WHERE SEXO='F' ORDER BY NOME;
+SELECT * FROM GAFANHOTOS WHERE NASCIMENTO BETWEEN '2000-01-01' AND '2015-12-31' ORDER BY NASCIMENTO;
+SELECT NOME FROM GAFANHOTOS WHERE SEXO='M' AND PROFISSAO='PROGRAMADOR' ORDER BY NOME;
+SELECT * FROM GAFANHOTOS WHERE SEXO='F' AND NACIONALIDADE='BRASIL' AND NOME LIKE 'J%';
+SELECT NOME , NACIONALIDADE FROM GAFANHOTOS WHERE SEXO='M' AND NOME LIKE '%SILVA%' AND PESO < 100 ORDER BY NOME;
+SELECT MAX(ALTURA) FROM GAFANHOTOS WHERE SEXO='M' AND NACIONALIDADE='BRASIL'; 
+SELECT AVG(PESO) FROM GAFANHOTOS;
+SELECT MIN(PESO) FROM GAFANHOTOS WHERE SEXO='F' AND NACIONALIDADE <>'BRASIL' AND NASCIMENTO BETWEEN '1990-01-01' AND '2000-12-31';
+SELECT COUNT(*) FROM GAFANHOTOS WHERE SEXO='F' AND ALTURA > 1.90;
+SELECT ano, count(*) FROM CURSOS group by ano order by count(*) desc;
+SELECT CARGA FROM CURSOS GROUP BY CARGA;
+SELECT CARGA, COUNT(NOME) FROM CURSOS GROUP BY CARGA ORDER BY CARGA;
+select carga, count(nome) from cursos group by carga having count(nome) > 3;
+SELECT ano, count(*) FROM CURSOS group by ano having count(ano) >=5;
+SELECT ano, count(*) FROM CURSOS group by ano having ano >=2015;
+
+select carga, count(*) from cursos where ano > 2015 group by carga having carga > (select avg(carga) from cursos) order by carga;
+SELECT PROFISSAO, COUNT(*) FROM GAFANHOTOS GROUP BY PROFISSAO;
+SELECT SEXO, COUNT(*) FROM GAFANHOTOS WHERE NASCIMENTO > '2005-01-01' GROUP BY SEXO ORDER BY NASCIMENTO;
+SELECT NACIONALIDADE, COUNT(*) FROM GAFANHOTOS WHERE NACIONALIDADE <> 'BRASIL' GROUP BY NACIONALIDADE HAVING COUNT(NACIONALIDADE) >=3;
+
+SELECT AVG(ALTURA) FROM GAFANHOTOS;
+SELECT ALTURA, COUNT(*) FROM GAFANHOTOS WHERE PESO > 100 GROUP BY ALTURA HAVING ALTURA > (SELECT AVG(ALTURA) FROM GAFANHOTOS);
+alter table gafanhotos add cursopreferido int;
+alter table gafanhotos add foreign key(cursopreferido) references cursos(idcurso);
+update gafanhotos set cursopreferido = '6' where id = '1';
+select * from gafanhotos;
+select nome, cursopreferido from gafanhotos;
+select g.nome, c.nome, c.ano from gafanhotos as g inner join cursos as c on c.idcurso = g.cursopreferido order by g.nome;
+select g.nome, c.nome, c.ano from gafanhotos as g left outer join cursos as c on c.idcurso = g.cursopreferido order by g.nome;
+select g.nome, c.nome, c.ano from gafanhotos as g right outer join cursos as c on c.idcurso = g.cursopreferido;
+create table gaf_assiste_curso(
+id int not null auto_increment,
+Data_aula date,
+idgafanhoto int,
+idcurso int,
+primary key(id),
+foreign key(idgafanhoto) references gafanhotos(id),
+foreign key (idcurso) references cursos(idcurso)
+)default charset=utf8;
+
+insert into gaf_assiste_curso values (default, '2014-03-01','1','2');
+select * from gaf_assiste_curso;
+select g.id, g.nome, a.idgafanhoto, idcurso from gafanhotos as g join gaf_assiste_curso as a on g.id = a.idgafanhoto;
+select g.nome, idcurso from gafanhotos as g join gaf_assiste_curso as a on g.id = a.idgafanhoto order by g.nome;
+
+select g.nome, c.nome from gafanhotos as g
+join gaf_assiste_curso as a
+on g.id = a.idgafanhoto
+join cursos as c
+on a.idcurso = c.idcurso
+order by g.nome;
